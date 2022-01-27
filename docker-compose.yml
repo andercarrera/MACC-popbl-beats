@@ -23,7 +23,7 @@ services:
       context: metricbeat/
       args:
         ELK_VERSION: $ELK_VERSION
-    command: bash -c "metricbeat modules enable elasticsearch && metricbeat setup"
+    command: bash -c "metricbeat -e -strict.perms=false && metricbeat modules enable elasticsearch && metricbeat setup"
     user: root
     network_mode: host
     volumes:
