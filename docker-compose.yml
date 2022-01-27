@@ -7,7 +7,7 @@ services:
       context: packetbeat/
       args:
         ELK_VERSION: $ELK_VERSION
-    entrypoint: "packetbeat -e -strict.perms=false"
+    command: packetbeat setup -e
     user: root
     cap_add: ['NET_RAW', 'NET_ADMIN'] # Grant some elevated privileges to capture network traffic.
     network_mode: host # Allow to capture traffic from host.
@@ -23,7 +23,7 @@ services:
       context: metricbeat/
       args:
         ELK_VERSION: $ELK_VERSION
-    entrypoint: "metricbeat -e -strict.perms=false" # disable strict permission checks
+    command: bash -c "metricbeat modules enable elasticsearch && metricbeat setup"
     user: root
     network_mode: host
     volumes:
@@ -37,7 +37,7 @@ services:
       context: auditbeat/
       args:
         ELK_VERSION: $ELK_VERSION
-    entrypoint: "auditbeat -e -strict.perms=false" # disable strict permission checks
+    command: auditbeat setup
     user: root
     network_mode: host
     volumes:
