@@ -1,0 +1,33 @@
+version: '3.6'
+
+services:    
+  packetbeat:
+    container_name: packetbeat
+    build:
+      context: packetbeat/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    entrypoint: "packetbeat -e -strict.perms=false"
+    user: root
+    cap_add: ['NET_RAW', 'NET_ADMIN'] # Grant some elevated privileges to capture network traffic.
+    network_mode: host # Allow to capture traffic from host.
+    volumes:
+      - type: bind
+        source: ./packetbeat/config/packetbeat.yml
+        target: /usr/share/packetbeat/packetbeat.yml
+        read_only: true
+        
+  metricbeat:
+    container_name: metricbeat
+    build:
+      context: metricbeat/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    entrypoint: "metricbeat -e -strict.perms=false" # disable strict permission checks
+    user: root
+    network_mode: host
+    volumes:
+      - type: bind
+        source: ./metricbeat/config/metricbeat.yml
+        target: /usr/share/metricbeat/metricbeat.yml
+        read_only: true
