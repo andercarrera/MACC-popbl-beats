@@ -31,3 +31,17 @@ services:
         source: ./metricbeat/config/metricbeat.yml
         target: /usr/share/metricbeat/metricbeat.yml
         read_only: true
+  auditbeat:
+    container_name: auditbeat
+    build:
+      context: auditbeat/
+      args:
+        ELK_VERSION: $ELK_VERSION
+    entrypoint: "auditbeat -e -strict.perms=false" # disable strict permission checks
+    user: root
+    network_mode: host
+    volumes:
+      - type: bind
+        source: ./auditbeat/config/auditbeat.yml
+        target: /usr/share/auditbeat/auditbeat.yml
+        read_only: true
