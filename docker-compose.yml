@@ -7,7 +7,7 @@ services:
       context: packetbeat/
       args:
         ELK_VERSION: $ELK_VERSION
-    command: packetbeat setup -e
+    command: bash -c "packetbeat -e -strict.perms=false && packetbeat setup -e"
     user: root
     cap_add: ['NET_RAW', 'NET_ADMIN'] # Grant some elevated privileges to capture network traffic.
     network_mode: host # Allow to capture traffic from host.
@@ -37,7 +37,7 @@ services:
       context: auditbeat/
       args:
         ELK_VERSION: $ELK_VERSION
-    command: auditbeat setup
+    command: bash -c "auditbeat -e -strict.perms=false && auditbeat setup"
     user: root
     network_mode: host
     volumes:
